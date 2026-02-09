@@ -1,1 +1,7 @@
 db/data/
+node_modules/
+.env
+dist/
+build/
+.idea/
+.vscode/
