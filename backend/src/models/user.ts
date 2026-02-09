@@ -1,9 +1,7 @@
 export interface User {
     id: number;
-    userName: string;
+    user_name: string;
     email: string;
     password: string;
     created_at: Date;
 }
-
-export let users: User[] = [];
