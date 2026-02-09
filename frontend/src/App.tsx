@@ -23,7 +23,7 @@ const App = () => {
                         </PrivateRoute>
                     }
                 />
-                <Route path="*" element={<Navigate to="/login"/>}/>
+                <Route path="*" element={<Navigate to="/dashboard"/>}/>
             </Routes>
         </Router>
     );

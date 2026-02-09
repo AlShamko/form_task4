@@ -3,18 +3,36 @@ import axios from "axios";
 import styled from "styled-components";
 import { TableRow } from "./TableRow.tsx";
 import type { User } from "../../types/user.ts";
+import { Unlock, Trash2, UserX } from "lucide-react";
 
 export const Table = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+    const isAnySelected = selectedIds.length > 0;
+
+    const toggleSelect = (id: number) => {
+        setSelectedIds(prev =>
+            prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+        );
+    };
+
+    const toggleAll = () => {
+        if (selectedIds.length === users.length && users.length > 0) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(users.map(u => u.id));
+        }
+    };
 
     useEffect(() => {
         let isMounted = true;
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get<User[]>("https://example.com/api/users");
+                const response = await axios.get<User[]>("http://localhost:3000/users");
                 if (isMounted) {
                     setUsers(response.data);
                     setError(null);
@@ -43,41 +61,134 @@ export const Table = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <StyledTableWrap>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {users.map((user) => (
-                <TableRow key={user.id} user={user} />
-            ))}
-            </tbody>
-        </StyledTableWrap>
+        <StyledContainer>
+            <StyledToolbar>
+                <StyledBlockButton
+                    disabled={!isAnySelected}
+                    onClick={() => console.log("Blocking:", selectedIds)}
+                >
+                    Block
+                </StyledBlockButton>
+
+                <StyledIconButton
+                    title="Unblock"
+                    disabled={!isAnySelected}
+                    onClick={() => console.log("Unblocking:", selectedIds)}
+                >
+                    <Unlock size={18} />
+                </StyledIconButton>
+
+                <StyledIconButton
+                    $danger
+                    title="Delete"
+                    disabled={!isAnySelected}
+                    onClick={() => console.log("Deleting:", selectedIds)}
+                >
+                    <Trash2 size={18} />
+                </StyledIconButton>
+
+                <StyledIconButton
+                    title="Delete unverified"
+                    disabled={users.length === 0}
+                    onClick={() => console.log("Cleanup unverified")}
+                >
+                    <UserX size={18} />
+                </StyledIconButton>
+            </StyledToolbar>
+
+            <StyledTableWrap>
+                <thead>
+                <tr>
+                    <th>
+                        <input
+                            type="checkbox"
+                            onChange={toggleAll}
+                            checked={selectedIds.length === users.length && users.length > 0}
+                        />
+                    </th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {users.map((user) => (
+                    <TableRow
+                        key={user.id}
+                        user={user}
+                        isSelected={selectedIds.includes(user.id)}
+                        onSelect={() => toggleSelect(user.id)}
+                    />
+                ))}
+                </tbody>
+            </StyledTableWrap>
+        </StyledContainer>
     );
 };
+
+const StyledContainer = styled.div`
+    padding: 20px;
+`;
+
+const StyledToolbar = styled.div`
+    background: #f8f9fa;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+`;
+
+const StyledBlockButton = styled.button`
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    &:disabled {
+        background-color: #e9ecef;
+        color: #adb5bd;
+        cursor: not-allowed;
+    }
+    &:not(:disabled):hover { opacity: 0.9; }
+`;
+
+const StyledIconButton = styled.button<{ $danger?: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: ${props => props.$danger ? '#dc3545' : '#495057'};
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:disabled {
+        color: #adb5bd;
+        border-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+        background: #f1f3f5;
+        border-color: #adb5bd;
+    }
+`;
 
 const StyledTableWrap = styled.table`
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
-
     th, td {
         padding: 10px 12px;
         border: 1px solid #ddd;
     }
-
-    th {
-        background-color: #f5f5f5;
-        font-weight: 600;
-    }
-
-    tbody tr:hover {
-        background-color: #f0f8ff;
-    }
+    th { background-color: #f5f5f5; }
 `;

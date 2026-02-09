@@ -1,11 +1,9 @@
 import {styled} from "styled-components";
-import {ToolBar} from "./ToolBar.tsx";
 import {Table} from "./Table.tsx";
 
 export const Dashboard = () => {
     return (
         <StyledWrapperPage>
-            <ToolBar/>
             <Table/>
         </StyledWrapperPage>
     );

@@ -27,7 +27,7 @@ export const RegisterForm = () => {
             });
 
             if (response.ok) {
-                navigate('/login');
+                navigate('/dashboard');
             } else {
                 const errorData = await response.json();
                 setServerError(errorData.message || 'Registration error');
@@ -42,8 +42,8 @@ export const RegisterForm = () => {
             <Input
                 label="Username"
                 type="text"
-                {...register("username", { required: "Enter your username" })}
-                error={errors.username?.message}
+                {...register("user_name", { required: "Enter your username" })}
+                error={errors.user_name?.message}
             />
             <Input
                 label="Email"
