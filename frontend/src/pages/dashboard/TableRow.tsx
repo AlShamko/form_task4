@@ -5,12 +5,13 @@ interface TableRowProps {
     user: User;
     isSelected: boolean;
     onSelect: () => void;
+    index: number;
 }
 interface StyledRowProps {
     $isSelected: boolean;
 }
 
-export const TableRow = ({ user, isSelected, onSelect }: TableRowProps) => {
+export const TableRow = ({ user, isSelected, onSelect, index }: TableRowProps) => {
     return (
         <StyledRow $isSelected={isSelected}>
             <td>
@@ -20,11 +21,13 @@ export const TableRow = ({ user, isSelected, onSelect }: TableRowProps) => {
                     onChange={onSelect}
                 />
             </td>
-            <td>{user.id}</td>
+            <td>{index + 1}</td>
             <td>{user.user_name}</td>
             <td>{user.email}</td>
             <td>
-                <StatusBadge $isActive={true}>Active</StatusBadge>
+                <StatusBadge $isActive={!user.status || user.status === 'active'}>
+                    {user.status ? user.status.charAt(0).toUpperCase() + user.status.slice(1) : 'Active'}
+                </StatusBadge>
             </td>
             <td>{new Date(user.created_at).toLocaleDateString()}</td>
         </StyledRow>

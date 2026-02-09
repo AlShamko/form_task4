@@ -27,6 +27,55 @@ export const Table = () => {
         }
     };
 
+    const handleDelete = async () => {
+        if (!selectedIds.length) return;
+
+        try {
+            await axios.delete("http://localhost:3000/users", {
+                data: {ids: selectedIds}
+            });
+
+            setUsers(prev => prev.filter(user => !selectedIds.includes(user.id)));
+            setSelectedIds([]);
+        } catch (err) {
+            console.error("Delete failed", err);
+            alert("Error deleting users");
+        }
+    };
+
+    const handleStatusChange = async (newStatus: 'active' | 'blocked') => {
+        if (!selectedIds.length) return;
+
+        try {
+            await axios.patch("http://localhost:3000/users/status", {
+                ids: selectedIds,
+                status: newStatus
+            });
+
+            setUsers(prev => prev.map(user =>
+                selectedIds.includes(user.id) ? { ...user, status: newStatus } : user
+            ));
+
+            setSelectedIds([]);
+        } catch (err) {
+            console.error("Status update failed", err);
+            alert("Failed to update status");
+        }
+    };
+
+    const handleDeleteUnverified = async () => {
+        if (!window.confirm("Delete all non-active users?")) return;
+
+        try {
+            await axios.delete("http://localhost:3000/users/unverified");
+
+            setUsers(prev => prev.filter(user => user.status === 'active'));
+            alert("Cleanup complete!");
+        } catch (err) {
+            console.error("Cleanup failed", err);
+        }
+    };
+
     useEffect(() => {
         let isMounted = true;
 
@@ -65,7 +114,7 @@ export const Table = () => {
             <StyledToolbar>
                 <StyledBlockButton
                     disabled={!isAnySelected}
-                    onClick={() => console.log("Blocking:", selectedIds)}
+                    onClick={() => handleStatusChange('blocked')}
                 >
                     Block
                 </StyledBlockButton>
@@ -73,7 +122,7 @@ export const Table = () => {
                 <StyledIconButton
                     title="Unblock"
                     disabled={!isAnySelected}
-                    onClick={() => console.log("Unblocking:", selectedIds)}
+                    onClick={() => handleStatusChange('active')}
                 >
                     <Unlock size={18} />
                 </StyledIconButton>
@@ -82,7 +131,7 @@ export const Table = () => {
                     $danger
                     title="Delete"
                     disabled={!isAnySelected}
-                    onClick={() => console.log("Deleting:", selectedIds)}
+                    onClick={handleDelete}
                 >
                     <Trash2 size={18} />
                 </StyledIconButton>
@@ -90,7 +139,7 @@ export const Table = () => {
                 <StyledIconButton
                     title="Delete unverified"
                     disabled={users.length === 0}
-                    onClick={() => console.log("Cleanup unverified")}
+                    onClick={handleDeleteUnverified}
                 >
                     <UserX size={18} />
                 </StyledIconButton>
@@ -106,7 +155,7 @@ export const Table = () => {
                             checked={selectedIds.length === users.length && users.length > 0}
                         />
                     </th>
-                    <th>ID</th>
+                    <th>№</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Status</th>
@@ -114,10 +163,11 @@ export const Table = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {users.map((user) => (
+                {users.map((user, idx) => (
                     <TableRow
                         key={user.id}
                         user={user}
+                        index={idx}
                         isSelected={selectedIds.includes(user.id)}
                         onSelect={() => toggleSelect(user.id)}
                     />
