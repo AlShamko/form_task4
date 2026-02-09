@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import pool from '../repositories/db';
 import { findUserByEmail } from '../repositories/userRepository';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
