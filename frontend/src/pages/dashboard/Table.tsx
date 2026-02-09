@@ -5,6 +5,8 @@ import { TableRow } from "./TableRow.tsx";
 import type { User } from "../../types/user.ts";
 import { Unlock, Trash2, UserX } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+
 export const Table = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -31,7 +33,7 @@ export const Table = () => {
         if (!selectedIds.length) return;
 
         try {
-            await axios.delete("http://localhost:3000/users", {
+            await axios.delete("${API_URL}/users", {
                 data: {ids: selectedIds}
             });
 
@@ -47,7 +49,7 @@ export const Table = () => {
         if (!selectedIds.length) return;
 
         try {
-            await axios.patch("http://localhost:3000/users/status", {
+            await axios.patch(`${API_URL}/users/status`, {
                 ids: selectedIds,
                 status: newStatus
             });
@@ -67,7 +69,7 @@ export const Table = () => {
         if (!window.confirm("Delete all non-active users?")) return;
 
         try {
-            await axios.delete("http://localhost:3000/users/unverified");
+            await axios.delete(`${API_URL}/users/unverified`);
 
             setUsers(prev => prev.filter(user => user.status === 'active'));
             alert("Cleanup complete!");
@@ -81,7 +83,7 @@ export const Table = () => {
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get<User[]>("http://localhost:3000/users");
+                const response = await axios.get<User[]>(`${API_URL}/users`);
                 if (isMounted) {
                     setUsers(response.data);
                     setError(null);
