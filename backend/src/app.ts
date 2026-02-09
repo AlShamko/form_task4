@@ -7,11 +7,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-
-// Routes
 app.use('/users', userRoutes);
-
-// Global error handler (should be after routes)
 app.use(errorHandler);
 
 
