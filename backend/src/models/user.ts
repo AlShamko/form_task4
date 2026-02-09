@@ -3,7 +3,7 @@ export interface User {
     userName: string;
     email: string;
     password: string;
-    createdAt: Date;
+    created_at: Date;
 }
 
 export let users: User[] = [];
