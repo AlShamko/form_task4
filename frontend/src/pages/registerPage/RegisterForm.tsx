@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {API_URL} from "../../api/users.api.ts";
 
 interface FormData {
     user_name: string;
@@ -20,7 +21,7 @@ export const RegisterForm = () => {
 
         setServerError(null);
         try {
-            const response = await fetch('http://localhost:3000/users', {
+            const response = await fetch(`${API_URL}/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),

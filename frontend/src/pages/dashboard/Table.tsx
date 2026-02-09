@@ -4,8 +4,7 @@ import styled from "styled-components";
 import { TableRow } from "./TableRow.tsx";
 import type { User } from "../../types/user.ts";
 import { Unlock, Trash2, UserX } from "lucide-react";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+import {API_URL} from "../../api/users.api.ts";
 
 export const Table = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -33,7 +32,7 @@ export const Table = () => {
         if (!selectedIds.length) return;
 
         try {
-            await axios.delete("${API_URL}/users", {
+            await axios.delete(`${API_URL}/users`, {
                 data: {ids: selectedIds}
             });
 
