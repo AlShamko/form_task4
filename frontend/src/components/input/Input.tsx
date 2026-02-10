@@ -25,7 +25,7 @@ const Label = styled.label`
     margin-bottom: 0.5rem;
     font-weight: 400;
     font-size: 0.8rem;
-    color: #4a4a4a;
+    color: #36ff00;
 `;
 
 const StyledInput = styled.input<{ $hasError?: boolean }>`
@@ -34,7 +34,7 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
     font-size: 1rem;
     background: rgba(205, 205, 205, 0.35);
     transition: border-color 0.2s;
-    color: #4a4a4a;
+    color: #36ff00;
 
     &:focus {
         outline: none;
