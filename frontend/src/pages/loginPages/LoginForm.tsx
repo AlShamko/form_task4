@@ -3,8 +3,9 @@ import { Button } from "../../components/button/Button.tsx";
 import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {API_URL} from "../../api/users.api.ts";
+import { useLocation } from 'react-router-dom';
 
 interface FormData {
     email: string;
@@ -19,6 +20,8 @@ export const LoginForm = () => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>();
     const navigate = useNavigate();
     const [serverError, setServerError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const location = useLocation();
 
     const onSubmit = async (data: FormData) => {
         setServerError(null);
@@ -41,8 +44,19 @@ export const LoginForm = () => {
         }
     };
 
+    useEffect(() => {
+        if (location.state?.message) {
+            const msg = location.state.message;
+            navigate(location.pathname, { replace: true, state: {} });
+            setTimeout(() => {
+                setSuccessMessage(msg);
+            }, 0);
+        }
+    }, [location.pathname, navigate]);
+
     return (
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
+            {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
             <Input
                 type="email"
                 label="Email"
@@ -85,4 +99,15 @@ const ErrorMessage = styled.p`
     color: red;
     font-size: 14px;
     margin: 0 0 10px 0;
+`;
+
+const SuccessMessage = styled.p`
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    text-align: center;
 `;
