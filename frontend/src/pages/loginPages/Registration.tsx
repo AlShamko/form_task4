@@ -18,16 +18,17 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledText = styled.p`
-    color: rgb(144, 255, 144);
+    color: rgb(0, 0, 0);
+    font-weight: 600;
     margin-right: 5px;
 `;
 
 const StyledLink = styled(Link)`
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     text-decoration: none;
     cursor: pointer;
 
     &:hover {
-        color: rgb(255, 144, 144);
+        color: rgb(0, 255, 34);
     }
 `;

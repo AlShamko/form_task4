@@ -1,11 +1,11 @@
-import { Input } from "../../components/input/Input.tsx";
-import { Button } from "../../components/button/Button.tsx";
-import { styled } from "styled-components";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import {Input} from "../../components/input/Input.tsx";
+import {Button} from "../../components/button/Button.tsx";
+import {styled} from "styled-components";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {API_URL} from "../../api/users.api.ts";
-import { useLocation } from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 
 interface FormData {
     email: string;
@@ -17,7 +17,7 @@ interface StyledButtonProps {
 }
 
 export const LoginForm = () => {
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>();
+    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<FormData>();
     const navigate = useNavigate();
     const [serverError, setServerError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export const LoginForm = () => {
         try {
             const response = await fetch(`${API_URL}/users/login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data),
             });
 
@@ -49,7 +49,7 @@ export const LoginForm = () => {
     useEffect(() => {
         if (location.state?.message) {
             const msg = location.state.message;
-            navigate(location.pathname, { replace: true, state: {} });
+            navigate(location.pathname, {replace: true, state: {}});
             setTimeout(() => {
                 setSuccessMessage(msg);
             }, 0);
@@ -62,13 +62,13 @@ export const LoginForm = () => {
             <Input
                 type="email"
                 label="Email"
-                {...register("email", { required: "Enter your email" })}
+                {...register("email", {required: "Enter your email"})}
                 error={errors.email?.message}
             />
             <Input
                 type="password"
                 label="Password"
-                {...register("password", { required: "Enter your password" })}
+                {...register("password", {required: "Enter your password"})}
                 error={errors.password?.message}
             />
 
@@ -98,7 +98,7 @@ const LoginButton = styled(Button)<StyledButtonProps>`
 `;
 
 const ErrorMessage = styled.p`
-    color: red;
+    color: #000000;
     font-size: 14px;
     margin: 0 0 10px 0;
 `;
