@@ -33,7 +33,9 @@ export const LoginForm = () => {
             });
 
             if (response.ok) {
+                const userData = await response.json();
                 localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('userEmail', userData.email);
                 navigate('/dashboard');
             } else {
                 const errorData = await response.json();

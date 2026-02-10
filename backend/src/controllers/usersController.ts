@@ -30,6 +30,18 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const currentUserEmail = req.headers['x-user-email'];
+
+        if (!currentUserEmail) {
+            return res.status(401).json({ message: 'Identification required' });
+        }
+
+        const userCheck = await pool.query('SELECT status FROM users WHERE email = $1', [currentUserEmail]);
+
+        if (userCheck.rows.length === 0 || userCheck.rows[0].status === 'blocked') {
+            return res.status(403).json({ message: 'Your account is blocked' });
+        }
+
         const query = 'SELECT id, user_name, email, status, created_at FROM users ORDER BY created_at DESC';
         const result = await pool.query(query);
         res.json(result.rows);

@@ -84,7 +84,14 @@ export const Table = () => {
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get<User[]>(`${API_URL}/users`);
+                const email = localStorage.getItem('userEmail');
+
+                const response = await axios.get<User[]>(`${API_URL}/users`, {
+                    headers: {
+                        'x-user-email': email
+                    }
+                });
+
                 if (isMounted) {
                     setUsers(response.data);
                     setError(null);
@@ -93,8 +100,8 @@ export const Table = () => {
                 if (isMounted) {
                     if (axios.isAxiosError(err)) {
                         if (err.response?.status === 401 || err.response?.status === 403) {
-                            localStorage.removeItem('isAuthenticated');
-                            navigate('/login');
+                            localStorage.clear();
+                            navigate('/login', { state: { message: 'Your account is blocked.' } });
                             return;
                         }
                         setError(err.message);
