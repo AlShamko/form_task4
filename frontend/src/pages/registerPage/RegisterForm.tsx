@@ -28,7 +28,7 @@ export const RegisterForm = () => {
             });
 
             if (response.ok) {
-                navigate('/dashboard');
+                navigate('/login');
             } else {
                 const errorData = await response.json();
                 setServerError(errorData.message || 'Registration error');
