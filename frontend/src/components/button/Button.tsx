@@ -30,12 +30,12 @@ const StyledButton = styled.button<StyledButtonProps>`
     cursor: pointer;
     transition: all 0.65s ease;
 
-    background-color: ${props => (props.$variant === 'secondary' ? '#90ff90' : '#ff484f')};
-    color: ${props => (props.$variant === 'secondary' ? '#000000' : '#000000')};
+    background-color: ${props => (props.$variant === 'secondary' ? '#90ff90' : '#90ff90')};
+    color: ${props => (props.$variant === 'secondary' ? '#000000' : 'rgb(0,0,0)')};
 
     &:hover {
-        background-color: color-mix(in srgb, ${p => p.$variant === 'secondary' ? '#90ff90' : '#50afff'} 70%, black);
-        color: ${props => (props.$variant === 'secondary' ? '#000000' : '#ffffff')};
+        background-color: color-mix(in srgb, ${p => p.$variant === 'secondary' ? '#90ff90' : '#90ff90'} 70%, black);
+        color: ${props => (props.$variant === 'secondary' ? '#000000' : '#000000')};
     }
 
     &:active {
