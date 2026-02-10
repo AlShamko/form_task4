@@ -34,7 +34,7 @@ export const LoginForm = () => {
                 navigate('/dashboard');
             } else {
                 const errorData = await response.json();
-                setServerError(errorData.message || 'Incorrect email or password');
+                setServerError(errorData.message || 'Login error');
             }
         } catch {
             setServerError('Server error. Please try again later.');

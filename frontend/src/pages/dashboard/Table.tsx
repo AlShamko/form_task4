@@ -5,12 +5,14 @@ import { TableRow } from "./TableRow.tsx";
 import type { User } from "../../types/user.ts";
 import { Unlock, Trash2, UserX } from "lucide-react";
 import {API_URL} from "../../api/users.api.ts";
+import { useNavigate } from 'react-router-dom'
 
 export const Table = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const navigate = useNavigate();
 
     const isAnySelected = selectedIds.length > 0;
 
@@ -89,9 +91,18 @@ export const Table = () => {
                 }
             } catch (err: unknown) {
                 if (isMounted) {
-                    if (axios.isAxiosError(err)) setError(err.message);
-                    else if (err instanceof Error) setError(err.message);
-                    else setError("Error");
+                    if (axios.isAxiosError(err)) {
+                        if (err.response?.status === 401 || err.response?.status === 403) {
+                            localStorage.removeItem('isAuthenticated');
+                            navigate('/login');
+                            return;
+                        }
+                        setError(err.message);
+                    } else if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError("Error");
+                    }
                 }
             } finally {
                 if (isMounted) setLoading(false);
