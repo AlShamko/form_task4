@@ -34,7 +34,7 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
     font-size: 1rem;
     background: rgba(205, 205, 205, 0.35);
     transition: border-color 0.2s;
-    color: #36ff00;
+    color: #000000;
 
     &:focus {
         outline: none;
